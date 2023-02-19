@@ -3,7 +3,7 @@
  *   node index.js 3 000 rocketseat
  */
 
-const { isMainThread } = require('worker_threads');
+const { isMainThread, Worker, workerData } = require('worker_threads');
 
 
 if (isMainThread) {
@@ -11,10 +11,12 @@ if (isMainThread) {
     const prefix = process.argv[3];
     const input = process.argv.slice(4).join(" ");
 
-    console.log(`threads: ${threads} / prefix: ${prefix} / input: ${input}`);
+    for (let i = 0; i < threads; i++) {
+        new Worker(__filename, { workerData: { prefix, input } });
+    }
 } else {
-    const prefix = "??";
-    const input = "??";
+    const prefix = workerData.prefix;
+    const input = workerData.input;
 
     const { createHash } = require("crypto");
     const { freemem, totalmem } = require("os");
