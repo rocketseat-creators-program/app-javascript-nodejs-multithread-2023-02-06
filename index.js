@@ -20,6 +20,7 @@ if (isMainThread) {
                     .filter(otherWorker => otherWorker !== worker)
                     .forEach(otherWorker => otherWorker.terminate());
             }
+            console.log(`Worker ${i} / ${message}`);
         });
     }
 } else {
@@ -34,7 +35,7 @@ if (isMainThread) {
         nonce = `+${Math.random().toFixed(17).substring(2)}${Math.random().toFixed(17).substring(2)}`;
         hash = createHash('sha256').update(`${input}${nonce}`).digest('hex');
         memory = ((1 - freemem() / totalmem()) * 100).toFixed(2) + '%';
-        console.log(`Input: ${input} / Nonce: ${nonce} / Hash: ${hash} / Memory: ${memory}`);
+        parentPort.postMessage(`Input: ${input} / Nonce: ${nonce} / Hash: ${hash} / Memory: ${memory}`);
     } while (!hash.startsWith(prefix));
     parentPort.postMessage('END');
 }
