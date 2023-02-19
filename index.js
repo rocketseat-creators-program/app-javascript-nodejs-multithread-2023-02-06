@@ -28,10 +28,10 @@ if (isMainThread) {
 
     const { createHash } = require("crypto");
     const { freemem, totalmem } = require("os");
-    let nonce = 0;
+    let nonce;
     let hash;
     do {
-        nonce++;
+        nonce = `+${Math.random().toFixed(17).substring(2)}${Math.random().toFixed(17).substring(2)}`;
         hash = createHash('sha256').update(`${input}${nonce}`).digest('hex');
         memory = ((1 - freemem() / totalmem()) * 100).toFixed(2) + '%';
         console.log(`Input: ${input} / Nonce: ${nonce} / Hash: ${hash} / Memory: ${memory}`);
